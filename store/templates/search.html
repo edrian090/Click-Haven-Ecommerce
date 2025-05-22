@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Header-->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Search Products</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Find what you're looking for...</p>
+        </div>
+    </div>
+</header>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10">
+            <div class="card mb-4 shadow-sm rounded-4">
+                <div class="card-header bg-white border-0 rounded-top-4">
+                    <h5 class="mb-0 fw-bold text-secondary">Search Products</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{% url 'search' %}">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-white border-end-0">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input 
+                                type="text" 
+                                class="form-control border-start-0" 
+                                placeholder="Search for products" 
+                                name="searched" 
+                                aria-label="Search for products"
+                                required
+                                value="{{ request.POST.searched|default_if_none:'' }}"
+                            >
+                        </div>
+                        <button type="submit" class="btn btn-secondary w-100">Search Products</button>
+                    </form>
+                </div>
+            </div>
+
+            {% if searched %}
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                    {% for product in searched %}
+                        <div class="col mb-5">
+                            <div class="card h-100 shadow-sm rounded-4 border-0 product-card-hover position-relative">
+                                {% if product.is_sale %}
+                                    <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem; z-index:2;">Sale</div>
+                                {% endif %}
+                                {% if product.image %}
+                                    <img class="card-img-top rounded-top-4" src="{{ product.image.url }}" alt="Image of {{ product.name }}" style="object-fit:cover; height:220px;" />
+                                {% else %}
+                                    <img class="card-img-top rounded-top-4" src="/media/uploads/products/default-product.png" alt="No image available" style="object-fit:cover; height:220px;" />
+                                {% endif %}
+                                <div class="card-body p-4">
+                                    <div class="text-center">
+                                        <h5 class="fw-bolder mb-2">{{ product.name }}</h5>
+                                        {% if product.is_sale %}
+                                            <span class="text-muted text-decoration-line-through">${{ product.price }}</span>
+                                            <span class="ms-2 text-danger fw-bold">${{ product.sale_price }}</span>
+                                        {% else %}
+                                            <span class="fw-bold">${{ product.price }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                    <div class="text-center">
+                                        <a class="btn btn-outline-dark mt-auto px-4" href="{% url 'product' product.id %}">View product</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="col-12">
+                            <div class="alert alert-warning text-center fw-bold fs-5 shadow-sm rounded-4 d-flex align-items-center justify-content-center gap-2" role="alert">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                No products found matching your search.
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.product-card-hover {
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+.product-card-hover:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+}
+</style>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Header-->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Product Categories</h1>
+            <p class="lead fw-normal text-white-50 mb-0">
+                Explore our wide range of product categories and discover items tailored to your needs.
+            </p>
+        </div>
+    </div>
+</header>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        {% for category in categories %}
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body text-center">
+                        <h4 class="card-title mb-3 text-capitalize">{{ category }}</h4>
+                        <a href="{% url 'category' category %}" class="btn btn-outline-secondary">
+                            Browse {{ category|title }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No categories are currently available. Please check back soon.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

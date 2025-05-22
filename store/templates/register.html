@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Header -->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Register</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Create an Account</p>
+        </div>
+    </div>
+</header>
+
+<!-- Registration Form -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-secondary text-white text-center">
+                    <h4>Sign Up</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{% url 'register' %}">
+                        <!-- ...existing code... -->
+                        <div class="card-body">
+                            <form method="POST" action="{% url 'register' %}">
+                                {% csrf_token %}
+
+                                <!-- Loop through form fields and display errors -->
+                                {% for field in form %}
+                                    <div class="mb-3">
+                                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                        {{ field }}
+                                        {% if field.errors %}
+                                            <div class="alert alert-danger py-1 px-2 mt-2 mb-0 d-flex align-items-center" role="alert" style="font-size: 0.95em;">
+                                                <span class="me-2">&#9888;</span>
+                                                <span>
+                                                    {% for error in field.errors %}
+                                                        {{ error }}<br>
+                                                    {% endfor %}
+                                                </span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+
+                                <!-- Non-field errors (e.g., password mismatch) -->
+                                {% if form.non_field_errors %}
+                                    <div class="alert alert-warning d-flex align-items-center" role="alert">
+                                        <span class="me-2">&#9888;</span>
+                                        <span>
+                                            {% for error in form.non_field_errors %}
+                                                {{ error }}<br>
+                                            {% endfor %}
+                                        </span>
+                                    </div>
+                                {% endif %}
+
+                                <!-- Submit Button -->
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-secondary btn-lg">
+                                        Register
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- ...existing code... -->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br><br><br>
+{% endblock %}
